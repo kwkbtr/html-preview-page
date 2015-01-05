@@ -1,18 +1,30 @@
 (function() {
     function init() {
-        var o = ko.observable().extend({ rateLimit: 500 });
+        var html = ko.observable().extend({ rateLimit: 500 });
+        var css = ko.observable().extend({ rateLimit: 500 });
+
         var viewModel = {
-            update: ko.computed({
+            updateHtml: ko.computed({
                 read: function() {},
-                write: function(t) { o(t); }
+                write: function(t) { html(t); }
+            }),
+            updateCss: ko.computed({
+                read: function() {},
+                write: function(t) { css(t); }
             })
         };
 
         ko.computed(function() {
-            var text = o();
-            if (text) {
-                var iframe = document.getElementsByTagName("iframe")[0];
-                iframe.contentDocument.body.innerHTML = text;
+            var iframe = document.getElementsByTagName("iframe")[0];
+            var h = html();
+            if (h) {
+                iframe.contentDocument.body.innerHTML = h;
+            }
+
+            var c = css();
+            if (c) {
+                var style = iframe.contentDocument.getElementsByTagName("style")[0];
+                style.innerText = c;
             }
         });
 
